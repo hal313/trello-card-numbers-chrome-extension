@@ -28,6 +28,7 @@
         "https://*.trello.com/*"
       ],
       "js": [
+        "bower_components/lodash/lodash.js",
         "bower_components/jquery/dist/jquery.js",
         "scripts/contentscript.js"
       ],
