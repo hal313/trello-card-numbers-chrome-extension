@@ -57,7 +57,7 @@
               // The ID is assigned on the server and appended to the element once the AJAX call returns; use an
               // polling interval to figure out when this is
               var intervalHandle = setInterval(function() {
-                var href = addedNodeElement.href,
+                var href = addedNodeElement ? addedNodeElement.href : undefined,
                   parts,
                   id,
                   stopPolling = function stopPolling() {
