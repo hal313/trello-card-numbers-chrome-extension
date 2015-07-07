@@ -35,7 +35,7 @@
     // Decorate all the cards
     decorateAllCards();
 
-    var cardsRoot = $("#board"),
+    var $cardsRoot = $("#board"),
       mutationObserverConfiguration = { childList: true, characterData: false, attributes: false, subtree: true},
       mutationObserver = new MutationObserver(function mutationObserverCallback(mutationRecords) {
         // Iterate through all the mutation records
@@ -91,7 +91,7 @@
     ;
 
     // Append the mutation observer
-    cardsRoot.each(function appendMutationObserver() {
+    $cardsRoot.each(function appendMutationObserver() {
       mutationObserver.observe(this, mutationObserverConfiguration);
     });
 
