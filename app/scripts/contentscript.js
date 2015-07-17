@@ -91,7 +91,7 @@
     ;
 
     // Append the mutation observer
-    cardsRoot.each(function appendMutationObserver() {
+    $cardsRoot.each(function appendMutationObserver() {
       mutationObserver.observe(this, mutationObserverConfiguration);
     });
 
