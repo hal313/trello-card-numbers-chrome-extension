@@ -1,19 +1,22 @@
 /* global chrome */
 
-(function() {
+(function (global) {
   'use strict';
 
-  // Match everything at 'trello.com' (http or https)
-  var pattern = /^http[s]?:\/\/([^\.]*\.)?trello\.com/;
-
-  chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
-    // Add an icon for when card numbers will be populated
-    //
-    // tab.url may not be available if the permission is not allowed
-    if (tab.url && tab.url.match(pattern)) {
-      chrome.pageAction.show(tabId);
+  /**
+   * Receives a message from a content script.
+   * 
+   * @param {*} request the request payload
+   * @param {*} sender  the sending entity
+   */
+  var onRequest = function onRequest(request, sender) {
+    // If the request is show_page_action
+    if (global.trello_card_numbers_chrome_extension.messages.SHOW_PAGE_ACTION === request) {
+      chrome.pageAction.show(sender.tab.id);
     }
+  };
 
-  });
+  // Add a message listener
+  chrome.extension.onRequest.addListener(onRequest);
 
-}());
+}(this));

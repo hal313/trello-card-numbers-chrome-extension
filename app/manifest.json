@@ -10,7 +10,6 @@
   "default_locale": "en",
   "background": {
     "scripts": [
-      "scripts/chromereload.js",
       "scripts/background.js"
     ]
   },
@@ -25,12 +24,12 @@
     {
       "matches": [
         "http://*.trello.com/*",
-        "https://*.trello.com/*"
+        "https://*.trello.com/*",
+        "https://trello.com/*"
       ],
       "js": [
-        "bower_components/lodash/lodash.js",
-        "bower_components/jquery/dist/jquery.js",
-        "scripts/contentscript.js"
+        "scripts/vendor.js",
+        "scripts/content.js"
       ],
       "run_at": "document_end",
       "all_frames": false
