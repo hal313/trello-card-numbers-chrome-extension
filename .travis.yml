@@ -1,0 +1,14 @@
+language: node_js
+node_js:
+  ## Use version 6+ of node to get around 'strict' errors in the 'superagent
+  ## package (transitive dep from publish dep)
+  ## https://github.com/wikimedia/grunt-stylelint/issues/36
+  - '6.14.1'
+before_install:
+  - npm install -g grunt-cli
+  - npm install
+script:
+  - .travis/build.sh
+notifications:
+  email:
+    - john-github@rmdashrf.org

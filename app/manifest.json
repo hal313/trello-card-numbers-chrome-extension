@@ -1,6 +1,6 @@
 {
   "name": "__MSG_appName__",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "manifest_version": 2,
   "description": "__MSG_appDescription__",
   "icons": {
@@ -10,7 +10,6 @@
   "default_locale": "en",
   "background": {
     "scripts": [
-      "scripts/chromereload.js",
       "scripts/background.js"
     ]
   },
@@ -28,9 +27,7 @@
         "https://*.trello.com/*"
       ],
       "js": [
-        "bower_components/lodash/lodash.js",
-        "bower_components/jquery/dist/jquery.js",
-        "scripts/contentscript.js"
+        "scripts/content.js"
       ],
       "run_at": "document_end",
       "all_frames": false

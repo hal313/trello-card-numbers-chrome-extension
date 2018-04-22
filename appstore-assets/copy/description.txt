@@ -1,0 +1,3 @@
+Adds card numbers (ID's) to Trello cards.
+
+Be sure to check out the GitHub project which hosts this code: https://github.com/hal313/trello-card-numbers-chrome-extension
