@@ -106,7 +106,7 @@ export VERSION=x.y.z && \
 echo Create a release branch && \
 git checkout -b release/$VERSION && \
 echo Version bump && \
-grunt version-bump &&
+grunt version-bump && \
 echo Commit the version bump && \
 git commit -a -m "Version bump" && \
 echo Build a release && \
