@@ -24,11 +24,9 @@
     {
       "matches": [
         "http://*.trello.com/*",
-        "https://*.trello.com/*",
-        "https://trello.com/*"
+        "https://*.trello.com/*"
       ],
       "js": [
-        "scripts/vendor.js",
         "scripts/content.js"
       ],
       "run_at": "document_end",

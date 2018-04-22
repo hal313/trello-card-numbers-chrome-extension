@@ -1,5 +1,5 @@
 /* global $, _ */
-(function (global) {
+(function (common) {
   'use strict';
 
   /**
@@ -118,7 +118,8 @@
     execute();
 
     // Let the background page update the "page action" status
-    chrome.extension.sendRequest(global.trello_card_numbers_chrome_extension.messages.SHOW_PAGE_ACTION);
+    chrome.extension.sendRequest(common.messages.SHOW_PAGE_ACTION);
   };
 
-}(this));
+  // Invoke with the namespaced member from the global context
+}(this.tcnce));

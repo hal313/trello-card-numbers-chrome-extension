@@ -2,7 +2,7 @@
   'use strict';
 
   module.exports = function (grunt) {
-  
+ 
     // Load grunt tasks automatically
     require('load-grunt-tasks')(grunt);
   
@@ -14,6 +14,8 @@
       app: 'app',
       dist: 'dist'
     },
+    // Options for JSON files (the same as jshint, but minus single quotes)
+    jshintJSONOptions,
     /**
      * Gets the path to the deployable package.
      * 
@@ -22,6 +24,10 @@
     getPackagePath = function getPackagePath() {
       return 'package/trello-card-numbers-' + grunt.file.readJSON('package.json').version + '.zip';
     };
+
+    // Set jshintJSONOptions to be the same as .jshintrc, execpt with the quotmark to be "double" in order to support valid JSON
+    jshintJSONOptions = JSON.parse(require('fs').readFileSync('.jshintrc').toString());
+    jshintJSONOptions.quotmark = 'double';
 
     grunt.initConfig({
       // Project settings
@@ -41,12 +47,11 @@
       watch: {
         js: {
           files: ['<%= config.app %>/scripts/{,*/}*.js'],
-// tasks: ['jshint', 'build']
-          tasks: ['build']
+          tasks: ['jshint:source', 'build']
         },
         manifests: {
           files: ['<%= config.app %>/manifest.json'],
-          tasks: ['build']
+          tasks: ['jshint:manifest', 'build']
         }
       },
   
@@ -67,70 +72,45 @@
       // Make sure code styles are up to par and there are no obvious mistakes
       jshint: {
         options: {
-          jshintrc: true,
-          reporterOutput: 'jshint-report.txt',
+          reporterOutput: '',
           reporter: require('jshint-stylish')
         },
-        all: [
-          'Gruntfile.js',
-          '<%= config.app %>/scripts/{,*/}*.js'
-        ]
+        manifest: {
+          options: jshintJSONOptions,
+          files: {
+            src: ['<%= config.app %>/manifest.json']
+          }
+        },
+        source: {
+          options: {
+            jshintrc: true
+          },
+          files: {
+            src: ['<%= config.app %>/scripts/{,*/}*.js']
+          }
+        },
+        gruntfile: {
+          options: {
+            jshintrc: true
+          },
+          files: {
+            src: ['Gruntfile.js']
+          }
+        }
       },
 
       uglify: {
         scripts: {
           files: {
-            'dist/scripts/background.js': ['app/scripts/background.js', 'app/scripts/shared.js'],
-            'dist/scripts/content.js': ['app/scripts/content.js', 'app/scripts/shared.js'],
-            'dist/scripts/vendor.js': ['node_modules/jquery/dist/jquery.js', 'node_modules/lodash/lodash.js']
+            // We can take advantage of runtime builds and place "shared" into both the background and the content script files;
+            // this allows us to have shared contstants!
+            // NOTE: Be sure that the shared code is listed first in order to allow the other scripts to have access immediately
+            'dist/scripts/background.js': ['app/scripts/shared.js', 'app/scripts/background.js'],
+            'dist/scripts/content.js': ['node_modules/jquery/dist/jquery.js', 'node_modules/lodash/lodash.js', 'app/scripts/shared.js', 'app/scripts/content.js']
           }
         }
       },
 
-      // Reads HTML for usemin blocks to enable smart builds that automatically
-      // concat, minify and revision files. Creates configurations in memory so
-      // additional tasks can operate on them
-      // useminPrepare: {
-      //   options: {
-      //     dest: '<%= config.dist %>'
-      //   },
-      //   html: [
-      //     '<%= config.app %>/popup.html'
-      //   ]
-      // },
-  
-      // Performs rewrites based on rev and the useminPrepare configuration
-      // usemin: {
-      //   options: {
-      //     assetsDirs: ['<%= config.dist %>']
-      //   },
-      //   html: ['<%= config.dist %>/{,*/}*.html'],
-      //   css: ['<%= config.dist %>/styles/{,*/}*.css']
-      // },
-
-      // Used to minifiy the HTML
-      // htmlmin: {
-      //   dist: {
-      //     options: {
-      //       removeCommentsFromCDATA: true,
-      //       collapseWhitespace: true,
-      //       removeComments: true,
-      //       collapseBooleanAttributes: true,
-      //       removeAttributeQuotes: true,
-      //       removeRedundantAttributes: true,
-      //       useShortDoctype: true,
-      //       removeEmptyAttributes: true,
-      //       removeOptionalTags: true
-      //     },
-      //     files: [{
-      //       expand: true,
-      //       cwd: '<%= config.dist %>',
-      //       src: '*.html',
-      //       dest: '<%= config.dist %>'
-      //     }]
-      //   }
-      // },
-  
       // Copies remaining files to places other tasks can use
       copy: {
         dist: {
@@ -142,7 +122,6 @@
             src: [
               'manifest.json',
               'images/{,*/}*.{webp,gif,png}',
-              '{,*/}*.html',
               '_locales/{,*/}*.json'
             ]
           }]
@@ -196,14 +175,8 @@
     // 'build'
     // Creates a static build, suitable for testing
     grunt.registerTask('build', [
-      // 'useminPrepare',
-      // 'concat',
-      // 'cssmin',
       'uglify',
       'copy'
-      // ,
-      // 'usemin',
-      // 'htmlmin'
     ]);
 
     //
@@ -211,9 +184,11 @@
     // Creates a build artifact, suitable for publishing to the Chrome Developer Dashboard
     grunt.registerTask('release', [
       // Check the code
-      'jshint',
+      'jshint:source',
+      'jshint:gruntfile',
+      'jshint:manifest',
       // Clean the workspace
-      'clean:dist',
+      'clean',
       // Do not automatically bump the version if the CI/CD server is publishing
       // // Bump the version
       //'version-bump',
@@ -291,7 +266,9 @@
     // '' or 'default'
     // The default task; creates a build after validating code through jshint
     grunt.registerTask('default', [
-      'jshint',
+      'jshint:source',
+      'jshint:gruntfile',
+      'jshint:manifest',
       'build'
     ]);
   };

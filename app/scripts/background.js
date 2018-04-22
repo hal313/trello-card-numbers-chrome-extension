@@ -1,6 +1,6 @@
 /* global chrome */
 
-(function (global) {
+(function (common) {
   'use strict';
 
   /**
@@ -11,7 +11,7 @@
    */
   var onRequest = function onRequest(request, sender) {
     // If the request is show_page_action
-    if (global.trello_card_numbers_chrome_extension.messages.SHOW_PAGE_ACTION === request) {
+    if (common.messages.SHOW_PAGE_ACTION === request) {
       chrome.pageAction.show(sender.tab.id);
     }
   };
@@ -19,4 +19,5 @@
   // Add a message listener
   chrome.extension.onRequest.addListener(onRequest);
 
-}(this));
+  // Invoke with the namespaced member from the global context
+}(this.tcnce));
