@@ -1,5 +1,6 @@
 {
   "name": "trello-card-numbers-chrome-extension",
+  "description": "Chrome extension for displaying card numbers on Trello cards",
   "version": "0.0.8",
   "dependencies": {
     "jquery": "^3.3.1",
