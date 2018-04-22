@@ -115,14 +115,14 @@ echo Checkout the "master" branch && \
 git checkout master && \
 echo Merge the release branch into the "master" branch && \
 git merge --no-ff release/$VERSION && \
+echo Delete the release branch && \
+git branch -d release/$VERSION && \
 echo Tag the release && \
 git tag -a -m "Tagged for release" $VERSION && \
 echo Checkout the "develop" branch && \
 git checkout develop && \
-echo Merge the release branch into the "develop" branch && \
-git merge --no-ff release/$VERSION && \
-echo Delete the release branch && \
-git branch -d release/$VERSION && \
+echo Merge the "master" branch into the "develop" branch && \
+git merge --no-ff master && \
 echo Push the branches and tags && \
 git push origin --all && \
 git push origin --tags
